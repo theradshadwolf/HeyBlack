@@ -1,0 +1,61 @@
+name: Build HeyBlack APK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x android/GlassesSDKSample/gradlew
+
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/GlassesSDKSample/app/heyblack-release.keystore
+
+      - name: Build Release APK
+        working-directory: android/GlassesSDKSample
+        run: |
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/android/GlassesSDKSample/app/heyblack-release.keystore \
+            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload Release APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HeyBlack-release-apk
+          path: android/GlassesSDKSample/app/build/outputs/apk/release/*.apk
+          retention-days: 30
+
+      - name: Build Debug APK (fallback if release fails)
+        if: failure()
+        working-directory: android/GlassesSDKSample
+        run: ./gradlew assembleDebug
+
+      - name: Upload Debug APK (fallback)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: HeyBlack-debug-apk
+          path: android/GlassesSDKSample/app/build/outputs/apk/debug/*.apk
+          retention-days: 30
