@@ -19,21 +19,8 @@ android {
         }
     }
 
-    signingConfigs {
-        release {
-            def storeFilePath = System.getProperty("android.injected.signing.store.file")
-            if (storeFilePath) {
-                storeFile = file(storeFilePath)
-            }
-            storePassword = System.getProperty("android.injected.signing.store.password") ?: ""
-            keyAlias = System.getProperty("android.injected.signing.key.alias") ?: ""
-            keyPassword = System.getProperty("android.injected.signing.key.password") ?: ""
-        }
-    }
-
     buildTypes {
         release {
-            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
