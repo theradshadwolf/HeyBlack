@@ -13,6 +13,9 @@ jobs:
 
     env:
       KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
     steps:
       - name: Checkout repository
@@ -27,6 +30,12 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Decode keystore
+        if: env.KEYSTORE_BASE64 != ''
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > /tmp/heyblack-release.keystore
+          echo "KEYSTORE_PATH=/tmp/heyblack-release.keystore" >> $GITHUB_ENV
+
       - name: Grant execute permission for gradlew
         run: chmod +x android/GlassesSDKSample/gradlew
 
@@ -34,37 +43,9 @@ jobs:
         working-directory: android/GlassesSDKSample
         run: ./gradlew assembleRelease --stacktrace
 
-      - name: Sign APK
-        if: env.KEYSTORE_BASE64 != ''
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > /tmp/heyblack-release.keystore
-
-          UNSIGNED_APK=$(find android/GlassesSDKSample/app/build/outputs/apk/release -name "*.apk" | head -1)
-          ALIGNED_APK="/tmp/heyblack-aligned.apk"
-          SIGNED_APK="/tmp/heyblack-release-signed.apk"
-
-          $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | sort -V | tail -1)/zipalign \
-            -v 4 "$UNSIGNED_APK" "$ALIGNED_APK"
-
-          $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | sort -V | tail -1)/apksigner sign \
-            --ks /tmp/heyblack-release.keystore \
-            --ks-key-alias "${{ secrets.KEY_ALIAS }}" \
-            --ks-pass pass:"${{ secrets.KEYSTORE_PASSWORD }}" \
-            --key-pass pass:"${{ secrets.KEY_PASSWORD }}" \
-            --out "$SIGNED_APK" \
-            "$ALIGNED_APK"
-
-          echo "SIGNED_APK=$SIGNED_APK" >> $GITHUB_ENV
-
-      - name: Set unsigned APK path (no secrets)
-        if: env.KEYSTORE_BASE64 == ''
-        run: |
-          UNSIGNED_APK=$(find android/GlassesSDKSample/app/build/outputs/apk/release -name "*.apk" | head -1)
-          echo "SIGNED_APK=$UNSIGNED_APK" >> $GITHUB_ENV
-
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
           name: HeyBlack-release-apk
-          path: ${{ env.SIGNED_APK }}
+          path: android/GlassesSDKSample/app/build/outputs/apk/release/*.apk
           retention-days: 30
