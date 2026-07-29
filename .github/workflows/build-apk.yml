@@ -11,6 +11,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,7 +35,7 @@ jobs:
         run: ./gradlew assembleRelease --stacktrace
 
       - name: Sign APK
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
+        if: env.KEYSTORE_BASE64 != ''
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > /tmp/heyblack-release.keystore
 
@@ -54,7 +57,7 @@ jobs:
           echo "SIGNED_APK=$SIGNED_APK" >> $GITHUB_ENV
 
       - name: Set unsigned APK path (no secrets)
-        if: ${{ secrets.KEYSTORE_BASE64 == '' }}
+        if: env.KEYSTORE_BASE64 == ''
         run: |
           UNSIGNED_APK=$(find android/GlassesSDKSample/app/build/outputs/apk/release -name "*.apk" | head -1)
           echo "SIGNED_APK=$UNSIGNED_APK" >> $GITHUB_ENV
