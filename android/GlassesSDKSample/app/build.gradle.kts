@@ -43,8 +43,12 @@ android {
     }
 }
 
+val aarFile = file("libs/glasses_sdk_20250723_v01.aar")
+
 dependencies {
-    implementation(files("libs/glasses_sdk_20250723_v01.aar"))
+    if (aarFile.exists()) {
+        implementation(files(aarFile))
+    }
     implementation("androidx.core:core-ktx:1.16.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("com.github.getActivity:XXPermissions:20.0")
