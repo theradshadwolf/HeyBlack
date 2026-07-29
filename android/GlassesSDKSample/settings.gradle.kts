@@ -12,13 +12,13 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         maven { url = uri("https://jitpack.io") }
         google()
         mavenCentral()
-        flatDir { dirs("app/libs") }
     }
 }
 

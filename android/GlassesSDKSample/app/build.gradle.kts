@@ -16,34 +16,30 @@ android {
         vectorDrawables { useSupportLibrary = true }
     }
 
-    val keystoreFile = System.getenv("KEYSTORE_PATH")
-    val keystorePass = System.getenv("KEYSTORE_PASSWORD")
-    val keyAliasVal = System.getenv("KEY_ALIAS")
-    val keyPassVal = System.getenv("KEY_PASSWORD")
-
     signingConfigs {
         create("release") {
-            if (!keystoreFile.isNullOrEmpty() && !keystorePass.isNullOrEmpty()
-                && !keyAliasVal.isNullOrEmpty() && !keyPassVal.isNullOrEmpty()) {
-                storeFile = file(keystoreFile)
-                storePassword = keystorePass
-                keyAlias = keyAliasVal
-                keyPassword = keyPassVal
-            } else {
-                val debugConfig = signingConfigs.getByName("debug")
-                storeFile = debugConfig.storeFile
-                storePassword = debugConfig.storePassword
-                keyAlias = debugConfig.keyAlias
-                keyPassword = debugConfig.keyPassword
-            }
+            storeFile = System.getenv("KEYSTORE_PATH")?.let { file(it) }
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
         }
     }
 
     buildTypes {
-        release {
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("debug")
+        }
+        getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("release")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = if (System.getenv("KEYSTORE_PATH") != null) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 
@@ -52,12 +48,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    kotlinOptions { jvmTarget = "1.8" }
-    buildFeatures { viewBinding = true }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
-    implementation(files("libs/glasses_sdk_20250723_v01.aar"))
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.aar"))))
     implementation("androidx.core:core-ktx:1.16.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("com.github.getActivity:XXPermissions:20.0")
