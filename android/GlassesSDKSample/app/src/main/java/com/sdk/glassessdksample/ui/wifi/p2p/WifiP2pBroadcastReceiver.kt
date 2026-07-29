@@ -5,9 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.NetworkInfo
 import android.net.wifi.p2p.WifiP2pDevice
-import android.net.wifi.p2p.WifiP2pDeviceList
-import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
+import android.os.Build
 import android.util.Log
 
 class WifiP2pBroadcastReceiver(
@@ -32,9 +31,13 @@ class WifiP2pBroadcastReceiver(
                 wifiP2pManagerSingleton.requestPeers()
             }
 
-            // Fix: correct constant is WIFI_P2P_CONNECTION_CHANGED_ACTION
             WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION -> {
-                val networkInfo: NetworkInfo? = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO)
+                @Suppress("DEPRECATION")
+                val networkInfo: NetworkInfo? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO, NetworkInfo::class.java)
+                } else {
+                    intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO)
+                }
                 Log.d(TAG, "Connection state changed: ${networkInfo?.isConnected}")
 
                 if (networkInfo?.isConnected == true) {
@@ -47,7 +50,12 @@ class WifiP2pBroadcastReceiver(
             }
 
             WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION -> {
-                val device: WifiP2pDevice? = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)
+                val device: WifiP2pDevice? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE, WifiP2pDevice::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)
+                }
                 device?.let {
                     Log.d(TAG, "This device changed: ${it.deviceName} - ${it.status}")
                     wifiP2pManagerSingleton.onThisDeviceChanged(it)
