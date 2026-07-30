@@ -90,7 +90,6 @@ class WifiP2pManagerSingleton private constructor(private val context: Context) 
     }
 
     fun startPeerDiscovery() {
-        // Cancel any pending timeout before posting a new one
         handler.removeCallbacks(discoveryTimeOut)
         handler.postDelayed(discoveryTimeOut, 16000L)
         wifiP2pManager.discoverPeers(wifiP2pChannel, object : WifiP2pManager.ActionListener {
@@ -101,7 +100,6 @@ class WifiP2pManagerSingleton private constructor(private val context: Context) 
 
             override fun onFailure(reason: Int) {
                 Log.e(TAG, "Peer discovery failed: $reason")
-                // Cancel the timeout so it doesn't fire and reset the channel
                 handler.removeCallbacks(discoveryTimeOut)
                 callbacks.forEach { it.onPeerDiscoveryFailed(reason) }
             }
@@ -126,7 +124,6 @@ class WifiP2pManagerSingleton private constructor(private val context: Context) 
         }
 
         connecting = true
-        // Post connect timeout — will retry once if no response
         handler.removeCallbacks(connectTimeOut)
         handler.postDelayed(connectTimeOut, 20000L)
         Log.d(TAG, "已经在连接设备: ${device.deviceName}")
@@ -268,7 +265,6 @@ class WifiP2pManagerSingleton private constructor(private val context: Context) 
     }
 
     internal fun onConnectionInfoAvailable(info: WifiP2pInfo) {
-        // Connection established — cancel the connect timeout
         handler.removeCallbacks(connectTimeOut)
         connecting = false
         connected = info.groupFormed
