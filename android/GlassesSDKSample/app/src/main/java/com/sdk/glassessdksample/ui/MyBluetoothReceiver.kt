@@ -14,8 +14,8 @@ import org.greenrobot.eventbus.EventBus
  * @author hzy ,
  * @date  2021/1/15
  * <p>
- * "程序应该是写给其他人读的,
- * 让机器来运行它只是一个附带功能"
+ * "Programs must be written for people to read,
+ * and only incidentally for machines to execute"
  **/
 class MyBluetoothReceiver : QCBluetoothCallbackCloneReceiver() {
     override fun connectStatue(device: BluetoothDevice?, connected: Boolean) {
@@ -32,8 +32,8 @@ class MyBluetoothReceiver : QCBluetoothCallbackCloneReceiver() {
     override fun onServiceDiscovered() {
         //do init
         LargeDataHandler.getInstance().initEnable()
-        // 必须收到回调才可以下发其它指令
-        // eg. 设置时间.同步设置项等等
+        // Must receive this callback before sending other commands
+        // e.g. set time, sync settings, etc.
         EventBus.getDefault().post(BluetoothEvent(true))
         Log.e("onServiceDiscovered","---onServiceDiscovered")
         BleOperateManager.getInstance().isReady=true

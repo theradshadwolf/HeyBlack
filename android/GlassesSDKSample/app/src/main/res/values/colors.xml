@@ -9,7 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
 
-    <!-- 主界面 -->
+    <!-- Main screen -->
     <color name="main_nv_select">#000000</color>
     <color name="main_nv_not_select">#717171</color>
     <color name="main_nv_bg">#f9f9f9</color>

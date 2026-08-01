@@ -18,8 +18,8 @@ import kotlin.properties.Delegates
  * @Author: Hzy
  * @CreateDate: 2021/6/25 11:50
  *
- * "程序应该是写给其他人读的,
- * 让机器来运行它只是一个附带功能"
+ * "Programs must be written for people to read,
+ * and only incidentally for machines to execute"
  */
 class MyApplication : Application(){
 

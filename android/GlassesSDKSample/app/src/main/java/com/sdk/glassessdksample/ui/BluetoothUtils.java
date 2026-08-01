@@ -12,7 +12,7 @@ import android.os.Build;
  */
 public class BluetoothUtils {
     /**
-     * 蓝牙功能是否已经启用
+     * Whether Bluetooth is enabled
      *
      * @return
      */
@@ -20,15 +20,15 @@ public class BluetoothUtils {
     public static boolean isEnabledBluetooth(Context context) {
         try {
             BluetoothAdapter adapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
-            // 不支持BLE
+            // BLE not supported
             if (!context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                 return false;
             }
-            // 不支持蓝牙
+            // Bluetooth not supported
             if (adapter == null) {
                 return false;
             }
-            // 蓝牙未打开
+            // Bluetooth not enabled
             return adapter.isEnabled();
         } catch (Exception e) {
             e.printStackTrace();

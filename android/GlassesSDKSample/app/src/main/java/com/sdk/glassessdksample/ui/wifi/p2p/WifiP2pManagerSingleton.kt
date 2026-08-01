@@ -110,12 +110,12 @@ class WifiP2pManagerSingleton private constructor(private val context: Context) 
 
     fun connectToDevice(device: WifiP2pDevice) {
         if (connecting) {
-            Log.d(TAG, "P2P正在连接,不调用连接返回")
+            Log.d(TAG, "P2P is connecting, skipping connect call")
             callbacks.forEach { it.connecting() }
             return
         }
         if (connected) {
-            Log.d(TAG, "P2P已经连接上了，直接返回")
+            Log.d(TAG, "P2P already connected, returning")
             return
         }
 
@@ -129,7 +129,7 @@ class WifiP2pManagerSingleton private constructor(private val context: Context) 
         // Post connect timeout — will retry once if no response
         handler.removeCallbacks(connectTimeOut)
         handler.postDelayed(connectTimeOut, 20000L)
-        Log.d(TAG, "已经在连接设备: ${device.deviceName}")
+        Log.d(TAG, "Connecting to device: ${device.deviceName}")
 
         wifiP2pManager.connect(wifiP2pChannel, config, object : WifiP2pManager.ActionListener {
             override fun onSuccess() {
@@ -284,9 +284,9 @@ class WifiP2pManagerSingleton private constructor(private val context: Context) 
     }
 
     private val discoveryTimeOut = Runnable {
-        Log.d(TAG, "内部扫描重试连接: $discoveryRetry")
+        Log.d(TAG, "Internal discovery retry: $discoveryRetry")
         if (discoveryRetry < 1) {
-            Log.d(TAG, "内部扫描重试连接一次")
+            Log.d(TAG, "Retrying peer discovery once internally")
             resetDeviceP2p()
             initP2P()
             startPeerDiscovery()
@@ -298,12 +298,12 @@ class WifiP2pManagerSingleton private constructor(private val context: Context) 
         connecting = false
         if (connectRetry < 1) {
             wifiP2pDevice?.let { device ->
-                Log.d(TAG, "内部连接重试连接一次")
+                Log.d(TAG, "Retrying connection once internally")
                 connectToDevice(device)
             }
             connectRetry++
         } else {
-            Log.d(TAG, "不重连，等外部超时")
+            Log.d(TAG, "Not retrying, awaiting external timeout")
             callbacks.forEach { it.retryAlsoFailed() }
         }
     }
