@@ -20,6 +20,7 @@ import com.oudmon.ble.base.communication.bigData.resp.GlassesDeviceNotifyRsp
 import com.sdk.glassessdksample.databinding.AcitivytMainBinding
 import com.sdk.glassessdksample.ui.BluetoothUtils
 import com.sdk.glassessdksample.ui.DeviceBindActivity
+import com.sdk.glassessdksample.ui.VoiceAIActivity
 import com.sdk.glassessdksample.ui.hasBluetooth
 import com.sdk.glassessdksample.ui.requestAllPermission
 import com.sdk.glassessdksample.ui.requestBluetoothPermission
@@ -114,7 +115,8 @@ class MainActivity : AppCompatActivity() {
             binding.btnBattery,
             binding.btnVolume,
             binding.btnMediaCount,
-            binding.btnDataDownload
+            binding.btnDataDownload,
+            binding.btnVoiceAi
         ) {
             when (this) {
                 binding.btnScan -> requestLocationPermission(this@MainActivity, PermissionCallback())
@@ -277,6 +279,10 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         startDataDownload()
                     }
+                }
+
+                binding.btnVoiceAi -> {
+                    startActivity(Intent(this@MainActivity, VoiceAIActivity::class.java))
                 }
             }
         }

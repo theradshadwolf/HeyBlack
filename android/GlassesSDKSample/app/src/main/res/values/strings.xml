@@ -1,19 +1,40 @@
 <resources>
     <string name="app_name">GlassesSDKSample</string>
-    <string name="text_1">扫描</string>
-    <string name="text_2">重连</string>
-    <string name="text_3">断开</string>
-    <string name="text_4">设置时间</string>
-    <string name="text_22">连接中...</string>
-    <string name="text_5">获取版本</string>
-    <string name="text_6">拍照</string>
-    <string name="text_7">录像</string>
-    <string name="text_8">录音</string>
-    <string name="text_9">智能拍照识图</string>
-    <string name="text_10">BT配对</string>
-    <string name="text_11">注册上报监听</string>
-    <string name="text_12">电量</string>
-    <string name="text_13">音量读取</string>
-    <string name="text_14">读取眼镜媒体的数量</string>
-    <string name="text_15">BLE+WiFi P2P数据下载</string>
+    <string name="text_1">Scan</string>
+    <string name="text_2">Reconnect</string>
+    <string name="text_3">Disconnect</string>
+    <string name="text_4">Set Time</string>
+    <string name="text_22">Connecting…</string>
+    <string name="text_5">Get Version</string>
+    <string name="text_6">Take Photo</string>
+    <string name="text_7">Record Video</string>
+    <string name="text_8">Record Audio</string>
+    <string name="text_9">Smart Photo Recognition</string>
+    <string name="text_10">BT Pair</string>
+    <string name="text_11">Register Notify Listener</string>
+    <string name="text_12">Battery</string>
+    <string name="text_13">Volume Read</string>
+    <string name="text_14">Get Media Count</string>
+    <string name="text_15">BLE+WiFi P2P Data Download</string>
+    <string name="text_scan_devices">Scan Devices</string>
+    <string name="text_voice_ai">Voice AI Assistant</string>
+
+    <!-- VoiceAIActivity strings -->
+    <string name="voice_ai_title">Voice AI Assistant</string>
+    <string name="voice_ai_back">← Back</string>
+    <string name="voice_ai_ready">Tap the button below and speak</string>
+    <string name="voice_ai_listening">Listening…</string>
+    <string name="voice_ai_processing">Processing speech…</string>
+    <string name="voice_ai_thinking">Thinking…</string>
+    <string name="voice_ai_tap_to_speak">🎤 Tap to Speak</string>
+    <string name="voice_ai_conversation_hint">Your conversation will appear here</string>
+    <string name="voice_ai_you">You</string>
+    <string name="voice_ai_ai">AI</string>
+    <string name="voice_ai_not_available">Speech recognition is not available on this device.</string>
+    <string name="voice_ai_permission_denied">Microphone permission denied. Please grant it in Settings.</string>
+    <string name="voice_ai_error_audio">Audio recording error. Please try again.</string>
+    <string name="voice_ai_error_no_match">No speech detected. Please try again.</string>
+    <string name="voice_ai_error_network">Network error. Check your internet connection.</string>
+    <string name="voice_ai_error_timeout">Listening timed out. Please try again.</string>
+    <string name="voice_ai_error_generic">Speech recognition error (code %d).</string>
 </resources>

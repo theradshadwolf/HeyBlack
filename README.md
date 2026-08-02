@@ -2,6 +2,8 @@
 
 Comprehensive SDKs for controlling HeyCyan smart glasses via Bluetooth Low Energy (BLE).
 
+> **Language**: This app is English-only. All UI text, log messages, and source-code comments are in English. Localization and runtime language switching are not supported.
+
 ## Platform Support
 
 - **iOS**: Full SDK available with demo application (see `ios/` directory)

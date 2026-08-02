@@ -18,7 +18,7 @@ static NSInteger const QCBleDefaultConnectTimeout = 6;
 
 @interface QCCentralManager()<CBCentralManagerDelegate>
 
-/*中心角色,app*/
+/*Central role, app*/
 @property (strong, nonatomic) CBCentralManager *centerManager;
 
 @property (strong, nonatomic) NSMutableArray<QCBlePeripheral *> *peripherals;
@@ -56,7 +56,7 @@ static NSInteger const QCBleDefaultConnectTimeout = 6;
     self = [super init];
     if (self) {
         NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 //蓝牙power没打开时alert提示框
+                                 //Show power alert when Bluetooth is not enabled
                                  [NSNumber numberWithBool:YES],CBCentralManagerOptionShowPowerAlertKey,
                                  [NSNumber numberWithBool:YES],CBConnectPeripheralOptionNotifyOnConnectionKey,
                                  nil];
@@ -198,7 +198,7 @@ static NSInteger const QCBleDefaultConnectTimeout = 6;
         @try {
             [_centerManager cancelPeripheralConnection:self.connectedPeripheral];
         } @catch (NSException *e) {
-            NSLog(@"warn: 取消设备(%@)连接时出现异常", self.connectedPeripheral.name);
+            NSLog(@"warn: Exception occurred while canceling connection to device (%@)", self.connectedPeripheral.name);
         }
     }
     
@@ -375,7 +375,7 @@ static NSInteger const QCBleDefaultConnectTimeout = 6;
 - (void)centralManager:(CBCentralManager *)central willRestoreState:(NSDictionary *)dict {
     NSArray *peripherals = dict[CBCentralManagerRestoredStatePeripheralsKey];
     if (peripherals.count > 0) {
-        //恢复重连上一次连接的设备
+        //Restore reconnection to the last connected device
         NSString *uuidStr = [[NSUserDefaults standardUserDefaults] objectForKey:QCLastConnectedIdentifier];
         if (uuidStr.length > 0) {
             for (CBPeripheral* pr in peripherals) {
@@ -412,7 +412,7 @@ static NSInteger const QCBleDefaultConnectTimeout = 6;
     NSArray *periperals = nil;
     NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:uuid];
     if(!UUID){
-        NSLog(@"NSUUID(%@)合法，但无法创建UUID，原因不明", uuid);
+        NSLog(@"NSUUID(%@) is valid but UUID could not be created for unknown reason", uuid);
         return nil;
     }
     periperals = [_centerManager retrievePeripheralsWithIdentifiers:@[UUID]];

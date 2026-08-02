@@ -307,7 +307,7 @@ typedef NS_ENUM(NSInteger, QGDeviceActionType) {
     
 }
 
-- (void)didConnected:(CBPeripheral *)peripheral     //用户可以返回设备类型
+- (void)didConnected:(CBPeripheral *)peripheral     //User can return device type
 {
     NSLog(@"didConnected");
     self.rightItem.enabled = YES;
